@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "npm i",
-    "projectsheet": "open $npm_package_studiohyperdrive_projectsheet"
+    "projectsheet": "open $npm_package_studiohyperdrive_projectsheet",
+    "docs": "node_modules/.bin/jsdoc -c jsdoc.json && open docs/index.html"
   },
   "repository": {
     "type": "git",
@@ -18,8 +19,23 @@
   ],
   "license": "ISC",
   "homepage": "https://bitbucket.org/district01/boilerplate#readme",
-  "dependencies": {},
-  "devDependencies": {},
+  "dependencies": {
+    "fast-json-patch": "2.0.6",
+    "mongoose": "5.1.2",
+    "node-uuid": "1.4.8",
+    "ramda": "0.25.0"
+  },
+  "devDependencies": {
+    "docdash": "0.4.0",
+    "jsdoc": "3.5.5",
+    "@studiohyperdrive/eslint-config": "3.0.1",
+    "chai": "4.0.2",
+    "eslint-plugin-chai-friendly": "0.4.1",
+    "istanbul": "0.4.5",
+    "mocha": "4.0.1",
+    "proxyquire": "1.8.0",
+    "supertest": "3.0.0"
+  },
   "studiohyperdrive": {
     "projectsheet": "https://bitbucket.org/district01/boilerplate/overview"
   }
