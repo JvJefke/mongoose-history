@@ -1,1 +1,1 @@
-console.log("Hi script!");
+module.exports = require("./History");
