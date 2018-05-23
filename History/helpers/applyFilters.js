@@ -30,7 +30,7 @@ module.exports = (item, filters) => filters.reduce((acc, filter) => {
 
 	// Set new value if mapping function is specified
 	if (isMappingRequired(filter)) {
-		R.set(R.lensPath(filter.path), filter.map(originalValue, filter.path));
+		acc = R.set(R.lensPath(filter.path), filter.map(originalValue, filter.path));
 	}
 
 	// Filter item from the object if filtering is required
