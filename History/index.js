@@ -26,7 +26,7 @@ class History {
 	 *
 	 * @returns {History} History instance
 	 */
-	constructor(type, config) {
+	constructor(type, config = {}) {
 		// Set type on class instance
 		this._type = type;
 		// Create mongoose model within the class instance
@@ -83,7 +83,8 @@ class History {
 
 	/**
 	 * Get history from start uuid to end uuid otpionally paginated
-	 * @param {Object} config Config object
+	 * @param {Object} [config] Config object
+	 * @param {String} [config.ref] reference to the source item
 	 * @param {String} [config.startUuid] History item (by uuid) to start from
 	 * @param {Strig} [config.endUuid] History item (by uuid) to end with
 	 * @param {Date} [config.startDate] History item (by uuid) to start from
@@ -93,8 +94,8 @@ class History {
 	 *
 	 * @returns {Promise<Object[]>} List of history items
 	 */
-	getHistory(config) {
-		return Helpers.getFindQueryBasedOnConfig(config)
+	getHistory(config = {}) {
+		return Helpers.getFindQueryByConfig(this._model, config)
 			.then((query) => this._model.count(query).then((count) => ({ query, count })))
 			.then((result) => this._model.find(result.query, null, { skip: config.skip, limit: config.limit })
 				.lean().exec().then((items) => ({ items, count: result.count }))
@@ -124,9 +125,10 @@ class History {
 	applyHistoryItems(startObject, historyItems, reverse = false) {
 		return R.compose(
 			// Get the `newDocument` of the result
-			R.prop(R.lensProp("newDocument")),
+			R.prop("newDocument"),
+			R.last,
 			// Aplly the patches
-			R.curryN(2, fastJSONPatch.applyPatch)(startObject),
+			R.curryN(2, fastJSONPatch.applyPatch)(R.clone(startObject)),
 			// Get all patches in the correct order
 			R.reduce(
 				(acc, item) => reverse ? item.reverse.concat(acc) : acc.concat(item.patches),

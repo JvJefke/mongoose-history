@@ -45,12 +45,18 @@ const getQueryByDate = (model, config) => {
 };
 
 
-module.exports = (model, config) => {
+module.exports = (model, config = {}) => {
 	const useUuid = !!config.startUuid;
+	const hasRef = !!config.ref;
+	const q = {};
 
-	if (useUuid) {
-		return getQueryByUuid(model, config);
+	if (hasRef) {
+		q["meta.ref"] = config.ref;
 	}
 
-	return getQueryByDate(model, config);
+	if (useUuid) {
+		return Object.assign(q, getQueryByUuid(model, config));
+	}
+
+	return Object.assign(q, getQueryByDate(model, config));
 };
