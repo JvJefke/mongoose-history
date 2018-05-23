@@ -1,5 +1,5 @@
-# [PROJECT-NAME] v1.0.0 #
-Short description of the project.
+# @studiohyperdrive/mongoose-history v0.0.1 #
+Mongoose History helper class to help you apply JSONPatch history to your objects using mongoose.
 
 
 # Table of contents #

@@ -1,7 +1,7 @@
 const getFindQueryByConfig = require("./getFindQueryByConfig");
-const removeExcludes = require("./removeExcludes");
+const applyFilters = require("./applyFilters");
 
 module.exports = {
 	getFindQueryByConfig,
-	removeExcludes,
+	applyFilters,
 };

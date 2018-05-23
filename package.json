@@ -6,7 +6,7 @@
   "scripts": {
     "start": "npm i",
     "projectsheet": "open $npm_package_studiohyperdrive_projectsheet",
-    "docs": "node_modules/.bin/jsdoc -c jsdoc.json && open docs/index.html",
+    "documentation": "node_modules/.bin/jsdoc -c jsdoc.json && open docs/index.html",
     "test": "NODE_ENV=test APP=test ./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha"
   },
   "repository": {

@@ -22,7 +22,8 @@ class History {
 	 * @param {Boolean|String|RegExp|Function} [config.filters.exclude] Exclude filter. Behavior depends on dataType:
 	 * - Boolean|Falsy: true => exclude, falsy => include
 	 * - String|RegExp: Regex used to filter the value
-	 * - Function: Filter by specified function
+	 * - Function: Filter by specified function `(item, path) => return true|false;`
+	 * @param {Function} [config.filters.map] Mapping function <br />`(item, path) => return mappedObject;`
 	 *
 	 * @returns {History} History instance
 	 */
@@ -50,8 +51,8 @@ class History {
 			throw Error("No old or new item passed!");
 		}
 
-		const prevExcluded = Helpers.removeExcludes(prev, this._filters);
-		const nextExcluded = Helpers.removeExcludes(next, this._filters);
+		const prevExcluded = Helpers.applyFilters(prev, this._filters);
+		const nextExcluded = Helpers.applyFilters(next, this._filters);
 
 		return {
 			patches: fastJSONPatch.compare(
