@@ -1,6 +1,6 @@
 const expect = require("chai").expect;
 
-const Helpers = require("./helpers");
+const Helpers = require("./_helpers");
 
 describe("applyHistoryItems", () => {
 	let _instance;

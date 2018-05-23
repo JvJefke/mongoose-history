@@ -22,8 +22,8 @@ class History {
 	 * @param {Boolean|String|RegExp|Function} [config.filters.exclude] Exclude filter. Behavior depends on dataType:
 	 * - Boolean|Falsy: true => exclude, falsy => include
 	 * - String|RegExp: Regex used to filter the value
-	 * - Function: Filter by specified function `(item, path) => return true|false;`
-	 * @param {Function} [config.filters.map] Mapping function <br />`(item, path) => return mappedObject;`
+	 * - Function: Filter by specified function `(item, path) => true|false;`
+	 * @param {Function} [config.filters.map] Mapping function <br />`(item, path) => mappedObject;`
 	 *
 	 * @returns {History} History instance
 	 */

@@ -1,3 +1,8 @@
+/**
+ * Apply filters helper module
+ * @module Helpers
+ */
+
 const getQueryByUuid = (model, config) => {
 	return model.find({ $or: [{ uuid: config.startUuid }, { uuid: config.endUuid }] })
 		.lean().exec()
@@ -44,7 +49,13 @@ const getQueryByDate = (model, config) => {
 	return Promise.resolve(query);
 };
 
-
+/**
+ * Get find query by config
+ * @function getFindQueryByConfig
+ *
+ * @param {Class} model
+ * @param {Object} [config={}]
+ */
 module.exports = (model, config = {}) => {
 	const useUuid = !!config.startUuid;
 	const hasRef = !!config.ref;
@@ -55,8 +66,8 @@ module.exports = (model, config = {}) => {
 	}
 
 	if (useUuid) {
-		return Object.assign(q, getQueryByUuid(model, config));
+		return getQueryByUuid(model, config).then((result) => Object.assign(q, result));
 	}
 
-	return Object.assign(q, getQueryByDate(model, config));
+	return getQueryByDate(model, config).then((result) => Object.assign(q, result));
 };

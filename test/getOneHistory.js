@@ -1,7 +1,7 @@
 const expect = require("chai").expect;
 const sinon = require("sinon");
 
-const Helpers = require("./helpers");
+const Helpers = require("./_helpers");
 
 describe("getOneHistory", () => {
 	let _instance;

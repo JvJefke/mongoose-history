@@ -1,7 +1,6 @@
 const expect = require("chai").expect;
-const Mongoose = require("mongoose").Mongoose;
 
-const Helpers = require("./helpers");
+const Helpers = require("./_helpers");
 
 describe("createHistory", () => {
 	let _instance;
@@ -16,8 +15,6 @@ describe("createHistory", () => {
 			"someUser",
 			{ data: "someData" }
 		);
-
-		console.log(historyObject.patches);
 
 		expect(historyObject).to.be.an("object");
 
