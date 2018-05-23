@@ -32,6 +32,9 @@ const DEFAULT_SCHEMA = {
 	patches: PATCH_SCHEMA,
 	reverse: PATCH_SCHEMA,
 	meta: {
+		ref: {
+			type: String,
+		},
 		type: {
 			type: String,
 			required: true,
@@ -57,15 +60,15 @@ module.exports = (config = {}) => {
 	const mongooseInstance = config.instance || mongoose;
 
 	// Get existing model if available instead of creating a new one
-	if (mongooseInstance.models[config.name || DEFAULT_NAME]) {
-		return mongooseInstance.models[config.name || DEFAULT_NAME];
+	if (mongooseInstance.models[config.dbName || DEFAULT_NAME]) {
+		return mongooseInstance.models[config.dbName || DEFAULT_NAME];
 	}
 
 	// Create the mongoose schema
 	const HistorySchema = new Schema(config.schema || DEFAULT_SCHEMA, { strict: true });
 
 	// Set the name of the collection
-	HistorySchema.set("collection", config.name || DEFAULT_NAME);
+	HistorySchema.set("collection", config.dbName || DEFAULT_NAME);
 
 	// Like blockchain, history should only be able to be added.
 	// This will not be able to block everything since de mongoose middleware api is really bad :'(
@@ -74,5 +77,5 @@ module.exports = (config = {}) => {
 	HistorySchema.pre("findOneAndRemove", disableMethod("updated"));
 	HistorySchema.pre("findOneAndUpdate", disableMethod("updated"));
 
-	return mongooseInstance.model(config.name || DEFAULT_NAME, HistorySchema);
+	return mongooseInstance.model(config.dbName || DEFAULT_NAME, HistorySchema);
 };
