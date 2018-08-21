@@ -3,17 +3,31 @@ const sinon = require("sinon");
 
 const Helpers = require("./_helpers");
 
-describe("saveHistory", () => {
+describe("getHistory", () => {
 	let _instance;
 	let execSpy;
 	let findSpy;
+	let populateSpy;
+	let sortSpy;
 	let countSpy;
 
 	beforeEach(() => {
 		_instance = Helpers.getInstance.default();
 
 		execSpy = sinon.spy(() => Promise.resolve([1, 2, 3]));
+		populateSpy = sinon.spy(() => ({
+			lean: () => ({
+				exec: execSpy,
+			}),
+		}));
+		sortSpy = sinon.spy(() => ({
+			populate: populateSpy,
+			lean: () => ({
+				exec: execSpy,
+			}),
+		}));
 		findSpy = sinon.spy(() => ({
+			sort: sortSpy,
 			lean: () => ({
 				exec: execSpy,
 			}),
@@ -30,10 +44,12 @@ describe("saveHistory", () => {
 		expect(result).to.eql({ items: [1, 2, 3], count: 3 });
 		expect(findSpy.calledOnce).to.be.true;
 		expect(execSpy.calledOnce).to.be.true;
+		expect(sortSpy.calledOnce).to.be.true;
+		expect(populateSpy.calledOnce).to.be.true;
 		expect(countSpy.calledOnce).to.be.true;
 		expect(findSpy.firstCall.args[0]).to.eql(countSpy.firstCall.args[0]);
 		expect(findSpy.firstCall.args).to.eql([
-			{ $and: [] },
+			{},
 			null,
 			{ skip: undefined, limit: undefined },
 		]);
@@ -60,6 +76,13 @@ describe("saveHistory", () => {
 	it("get History width uuid parameters", () => {
 		const customExecStub = sinon.stub();
 		const customFindSpy = sinon.spy(() => ({
+			sort: () => ({
+				populate: () => ({
+					lean: () => ({
+						exec: customExecStub,
+					}),
+				}),
+			}),
 			lean: () => ({
 				exec: customExecStub,
 			}),

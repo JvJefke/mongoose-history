@@ -13,6 +13,10 @@ const getQueryByUuid = (model, config) => {
 			const startPoint = result.find((item) => item.uuid === config.startUuid);
 			const endPoint = result.find((item) => item.uuid === config.endUuid);
 
+			if (!startPoint && !endPoint) {
+				return {};
+			}
+
 			if (startPoint) {
 				query.$and.push({
 					"meta.created": { $gte: new Date(startPoint.meta.created) },
@@ -33,6 +37,10 @@ const getQueryByDate = (model, config) => {
 	const query = {
 		$and: [],
 	};
+
+	if (!config.startDate && !config.endDate) {
+		return Promise.resolve({});
+	}
 
 	if (config.startDate) {
 		query.$and.push({

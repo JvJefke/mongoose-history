@@ -1,6 +1,7 @@
 const R = require("ramda");
 const historyModelCreator = require("./modelCreators/history");
 const fastJSONPatch = require("fast-json-patch");
+const defaults = require("./defaults");
 
 const Helpers = require("./helpers");
 
@@ -9,6 +10,10 @@ const Helpers = require("./helpers");
  * @constructor
  */
 class History {
+	static getDefaults() {
+		return R.clone(defaults);
+	}
+
 	/**
 	 * Create a History object
 	 * @param {String} type String identifier for type of history
@@ -43,10 +48,11 @@ class History {
 	 * @param {String} ref Reference to the original item
 	 * @param {String} [user] Id of the user that comitted the changes
 	 * @param {String} [data] Extra data to be saved in the history item
+	 * @param {Date} [created] overwrite created time
 	 *
 	 * @returns {Object} History item
 	 */
-	createHistory(prev, next, ref, user, data) {
+	createHistory(prev, next, ref, user, data, created = new Date()) {
 		if (!prev || !next) {
 			throw Error("No old or new item passed!");
 		}
@@ -68,6 +74,7 @@ class History {
 				ref,
 				user,
 				data,
+				created,
 			},
 		};
 	}
@@ -92,6 +99,8 @@ class History {
 	 * @param {Date} [config.endDate] History item (by uuid) to end with
 	 * @param {Number} [config.skip] Skip
 	 * @param {Number} [config.limit] Limit
+	 * @param {number} [config.order] Order parameter (1, -1)
+	 * @param {Any} [config.population] Define object population if needed
 	 *
 	 * @returns {Promise<Object[]>} List of history items
 	 */
@@ -99,7 +108,11 @@ class History {
 		return Helpers.getFindQueryByConfig(this._model, config)
 			.then((query) => this._model.count(query).then((count) => ({ query, count })))
 			.then((result) => this._model.find(result.query, null, { skip: config.skip, limit: config.limit })
-				.lean().exec().then((items) => ({ items, count: result.count }))
+				.sort({ "meta.created": config.order || 1 })
+				.populate(config.population)
+				.lean().exec()
+				.then((items) => ({ items, count: result.count })
+				)
 			);
 	}
 
@@ -119,9 +132,7 @@ class History {
 	 * @param {Object[]} historyItems List of history objects used to apply patches on the start object.
 	 * @param {Boolean} [reverse] Specify if the patches should be reverse applied. The last history item will be used first if this is set to true. It will also use the reverse patches of the history object when set to true.
 	 *
-	 * @returns {Object} Returns a object containing an `item` property and a `patch` property. <br/>
-	 * The `item` property is the new item wich has ben created by applying the patches. <br/>
-	 * The `patch` property contains the new patch created by diffing the start object with the result
+	 * @returns {Object} Returns the updated object
 	 */
 	applyHistoryItems(startObject, historyItems, reverse = false) {
 		return R.compose(
