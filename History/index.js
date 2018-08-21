@@ -109,7 +109,7 @@ class History {
 			.then((query) => this._model.count(query).then((count) => ({ query, count })))
 			.then((result) => this._model.find(result.query, null, { skip: config.skip, limit: config.limit })
 				.sort({ "meta.created": config.order || 1 })
-				.populate(config.population)
+				.populate(config.population || "")
 				.lean().exec()
 				.then((items) => ({ items, count: result.count }))
 			);
