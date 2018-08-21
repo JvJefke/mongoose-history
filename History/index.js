@@ -111,8 +111,7 @@ class History {
 				.sort({ "meta.created": config.order || 1 })
 				.populate(config.population)
 				.lean().exec()
-				.then((items) => ({ items, count: result.count })
-				)
+				.then((items) => ({ items, count: result.count }))
 			);
 	}
 
