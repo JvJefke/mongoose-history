@@ -134,6 +134,10 @@ class History {
 	 * @returns {Object} Returns the updated object
 	 */
 	applyHistoryItems(startObject, historyItems, reverse = false) {
+		if (!Array.isArray(historyItems) || !historyItems.length) {
+			return startObject;
+		}
+
 		return R.compose(
 			// Get the `newDocument` of the result
 			R.prop("newDocument"),
