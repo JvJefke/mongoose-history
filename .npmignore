@@ -1,0 +1,8 @@
+coverage
+node_modules
+.git
+test
+.editorconfig
+.eslintrc.js
+.gitignore
+.jsdoc.js
