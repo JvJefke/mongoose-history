@@ -141,7 +141,6 @@ class History {
 		return R.compose(
 			// Get the `newDocument` of the result
 			R.prop("newDocument"),
-			R.last,
 			// Aplly the patches
 			R.curryN(2, fastJSONPatch.applyPatch)(R.clone(startObject)),
 			// Get all patches in the correct order
